@@ -33,7 +33,7 @@ class Light extends Viewer.Dynamic
 		@loadImage(@src + "00.png").then((img)->
 			_t.canvas.attr {'width':img.width, 'height': img.height}
 			_t.ctx.drawImage img , 0 , 0 
-			defer.resolve()
+			defer.resolve(_t)
 		)
 		defer
 	loadParts : (gap,defer)->
@@ -50,7 +50,7 @@ class Light extends Viewer.Dynamic
 							index = parseInt(img.src.match(/\d+(?=.png)/)[0])
 							downloadImagesArr[index] = imagesArr[index] = img
 					if Object.getOwnPropertyNames(imagesArr).length == (amountOfImages + 1)
-						defer.resolve()
+						defer.resolve(_t)
 					else
 						_t.loadParts(++gap,defer)
 					_t.delay = (_t.sliceDownload / gap) * setSpeed
