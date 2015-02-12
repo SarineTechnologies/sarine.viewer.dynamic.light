@@ -33,7 +33,7 @@ class Light extends Viewer.Dynamic
 		@loadImage(@src + "00.png").then((img)->
 			_t.canvas.attr {'width':img.width, 'height': img.height}
 			_t.ctx.drawImage img , 0 , 0 
-			defer.resolve(_t)
+			defer.resolve(_t) 
 		)
 		defer
 	loadParts : (gap,defer)->
