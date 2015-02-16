@@ -1,6 +1,6 @@
 
 /*!
-sarine.viewer.dynamic.light - v0.0.3 -  Sunday, February 15th, 2015, 4:58:52 PM 
+sarine.viewer.dynamic.light - v0.0.4 -  Monday, February 16th, 2015, 3:45:34 PM 
  The source code, name, and look and feel of the software are Copyright © 2015 Sarine Technologies Ltd. All Rights Reserved. You may not duplicate, copy, reuse, sell or otherwise exploit any portion of the code, content or visual design elements without express written permission from Sarine Technologies Ltd. The terms and conditions of the sarine.com website (http://sarine.com/terms-and-conditions/) apply to the access and use of this software.
  */
 
@@ -222,7 +222,7 @@ sarine.viewer.dynamic.light - v0.0.3 -  Sunday, February 15th, 2015, 4:58:52 PM
       var defer;
       defer = this.full_init_defer;
       defer.notify(this.id + " : start load all images");
-      this.loadParts();
+      this.loadParts().then(defer.resolve);
       return defer;
     };
 
