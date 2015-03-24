@@ -1,5 +1,5 @@
 ###!
-sarine.viewer.dynamic.light - v0.0.5 -  Monday, February 23rd, 2015, 2:42:36 PM 
+sarine.viewer.dynamic.light - v0.0.5 -  Tuesday, March 24th, 2015, 12:10:25 PM 
  The source code, name, and look and feel of the software are Copyright © 2015 Sarine Technologies Ltd. All Rights Reserved. You may not duplicate, copy, reuse, sell or otherwise exploit any portion of the code, content or visual design elements without express written permission from Sarine Technologies Ltd. The terms and conditions of the sarine.com website (http://sarine.com/terms-and-conditions/) apply to the access and use of this software.
 ###
 class Light extends Viewer.Dynamic
@@ -28,7 +28,7 @@ class Light extends Viewer.Dynamic
 	convertElement : () ->
 		@canvas = $("<canvas>")		
 		@ctx = @canvas[0].getContext('2d')
-		@element.append(@canvas)
+		@element.append(@canvas)		
 
 	first_init : ()->
 		defer = @first_init_defer
@@ -36,7 +36,7 @@ class Light extends Viewer.Dynamic
 		_t = @
 		@loadImage(@src + "00.png").then((img)->
 			_t.canvas.attr {'width':img.width, 'height': img.height}
-			_t.ctx.drawImage img , 0 , 0 
+			_t.ctx.drawImage img , 0 , 0 			
 			defer.resolve(_t) 
 		)
 		defer
@@ -57,7 +57,7 @@ class Light extends Viewer.Dynamic
 						defer.resolve(_t)
 					else
 						_t.loadParts(++gap,defer)
-					_t.delay = (_t.sliceDownload / gap) * setSpeed
+					_t.delay = (_t.sliceDownload / gap) * setSpeed  
 				)
 		return defer
 
@@ -70,10 +70,10 @@ class Light extends Viewer.Dynamic
 		defer	
 
 	nextImage : ()->
-		indexer = Object.getOwnPropertyNames(downloadImagesArr).map((v)-> parseInt(v))
+		indexer = Object.getOwnPropertyNames(downloadImagesArr).map((v)-> parseInt(v)) 
 		if indexer.length > 1
-			@ctx.drawImage downloadImagesArr[indexer[counter]] , 0 , 0
-			counter = (counter + 1) % indexer.length
-			
+			@ctx.clearRect 0, 0, @canvas.width(), @canvas.height()
+			@ctx.drawImage downloadImagesArr[indexer[counter]] , 0 , 0			
+			counter = (counter + 1) % indexer.length			
 
 @Light = Light
