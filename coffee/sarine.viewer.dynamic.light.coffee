@@ -1,5 +1,5 @@
 ###!
-sarine.viewer.dynamic.light - v0.0.6 -  Tuesday, March 24th, 2015, 12:11:44 PM 
+sarine.viewer.dynamic.light - v0.0.6-hotfix -  Thursday, April 2nd, 2015, 11:50:03 AM 
  The source code, name, and look and feel of the software are Copyright © 2015 Sarine Technologies Ltd. All Rights Reserved. You may not duplicate, copy, reuse, sell or otherwise exploit any portion of the code, content or visual design elements without express written permission from Sarine Technologies Ltd. The terms and conditions of the sarine.com website (http://sarine.com/terms-and-conditions/) apply to the access and use of this software.
 ###
 class Light extends Viewer.Dynamic
@@ -72,7 +72,7 @@ class Light extends Viewer.Dynamic
 	nextImage : ()->
 		indexer = Object.getOwnPropertyNames(downloadImagesArr).map((v)-> parseInt(v)) 
 		if indexer.length > 1
-			@ctx.clearRect 0, 0, @canvas.width(), @canvas.height()
+			@ctx.clearRect 0, 0, @ctx.canvas.width, @ctx.canvas.height
 			@ctx.drawImage downloadImagesArr[indexer[counter]] , 0 , 0			
 			counter = (counter + 1) % indexer.length			
 
