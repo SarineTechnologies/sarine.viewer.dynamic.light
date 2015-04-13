@@ -1,6 +1,6 @@
 
 /*!
-sarine.viewer.dynamic.light - v0.1.0 -  Monday, April 6th, 2015, 6:36:49 PM 
+sarine.viewer.dynamic.light - v0.1.0 -  Monday, April 13th, 2015, 11:28:57 AM 
  The source code, name, and look and feel of the software are Copyright © 2015 Sarine Technologies Ltd. All Rights Reserved. You may not duplicate, copy, reuse, sell or otherwise exploit any portion of the code, content or visual design elements without express written permission from Sarine Technologies Ltd. The terms and conditions of the sarine.com website (http://sarine.com/terms-and-conditions/) apply to the access and use of this software.
  */
 
@@ -37,7 +37,7 @@ sarine.viewer.dynamic.light - v0.1.0 -  Monday, April 6th, 2015, 6:36:49 PM
     function Light(options) {
       var index, _i;
       Light.__super__.constructor.call(this, options);
-      this.sliceDownload = options.sliceDownload;
+      this.sliceDownload = options.sliceDownload, this.backOnEnd = options.backOnEnd, this.imageType = options.imageType, this.oneDigits = options.oneDigits;
       this.sliceDownload = this.sliceDownload | 3;
       this.imagesArr = {};
       this.downloadImagesArr = {};
@@ -59,7 +59,7 @@ sarine.viewer.dynamic.light - v0.1.0 -  Monday, April 6th, 2015, 6:36:49 PM
       defer = this.first_init_defer;
       defer.notify(this.id + " : start load first image");
       _t = this;
-      this.loadImage(this.src + "00.png").then(function(img) {
+      this.loadImage(this.src + (this.oneDigits ? "0" : "00") + (this.imageType ? this.imageType : ".png")).then(function(img) {
         _t.canvas.attr({
           'width': img.width,
           'height': img.height
@@ -94,7 +94,7 @@ sarine.viewer.dynamic.light - v0.1.0 -  Monday, April 6th, 2015, 6:36:49 PM
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           index = _ref[_i];
           _results.push((function(index) {
-            return _t.loadImage(_t.src + (index < 10 ? "0" + index : index) + ".png").then(function(img) {
+            return _t.loadImage(_t.src + (index < 10 && !_t.oneDigits ? "0" + index : index) + (_t.imageType ? _t.imageType : ".png")).then(function(img) {
               return downloadImages.push(img);
             });
           })(index));
@@ -104,7 +104,7 @@ sarine.viewer.dynamic.light - v0.1.0 -  Monday, April 6th, 2015, 6:36:49 PM
         var img, _fn, _i, _len;
         _fn = function(img) {
           var index;
-          index = parseInt(img.src.match(/\d+(?=.png)/)[0]);
+          index = parseInt(img.src.match(/\d+(?=.png|.jpg)/)[0]);
           return downloadImagesArr[index] = imagesArr[index] = img;
         };
         for (_i = 0, _len = downloadImages.length; _i < _len; _i++) {

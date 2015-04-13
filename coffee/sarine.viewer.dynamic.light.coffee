@@ -1,5 +1,5 @@
 ###!
-sarine.viewer.dynamic.light - v0.1.0 -  Monday, April 6th, 2015, 6:36:49 PM 
+sarine.viewer.dynamic.light - v0.1.0 -  Monday, April 13th, 2015, 11:28:57 AM 
  The source code, name, and look and feel of the software are Copyright © 2015 Sarine Technologies Ltd. All Rights Reserved. You may not duplicate, copy, reuse, sell or otherwise exploit any portion of the code, content or visual design elements without express written permission from Sarine Technologies Ltd. The terms and conditions of the sarine.com website (http://sarine.com/terms-and-conditions/) apply to the access and use of this software.
 ###
 class Light extends Viewer.Dynamic
@@ -15,8 +15,8 @@ class Light extends Viewer.Dynamic
 	sliceCount = 0
 	counter = 1
 	constructor: (options) ->
-		super(options)						
-		{@sliceDownload} = options
+		super(options)	
+		{@sliceDownload, @backOnEnd, @imageType, @oneDigits} = options
 		@sliceDownload = @sliceDownload | 3
 		@imagesArr = {}
 		@downloadImagesArr = {}
@@ -34,7 +34,8 @@ class Light extends Viewer.Dynamic
 		defer = @first_init_defer
 		defer.notify(@id + " : start load first image")
 		_t = @
-		@loadImage(@src + "00.png").then((img)->
+		
+		@loadImage(@src + (if @oneDigits then "0" else "00") + (if @imageType then @imageType else ".png")).then((img)->
 			_t.canvas.attr {'width':img.width, 'height': img.height}
 			_t.ctx.drawImage img , 0 , 0 			
 			defer.resolve(_t) 
@@ -47,11 +48,11 @@ class Light extends Viewer.Dynamic
 		_t = @
 		$.when.apply($,for index in (index for index in Object.getOwnPropertyNames(@imagesArr) when (index + gap) % @sliceDownload == 0)
 			do (index)->
-				_t.loadImage(_t.src + (if index < 10 then "0" + index else index)  + ".png").then((img)-> downloadImages.push img )
+				_t.loadImage(_t.src + (if index < 10 and not _t.oneDigits  then "0" + index else index)  + (if _t.imageType then _t.imageType else ".png")).then((img)-> downloadImages.push img )
 			).then(()->
 					for img in downloadImages
 						do (img)->
-							index = parseInt(img.src.match(/\d+(?=.png)/)[0])
+							index = parseInt(img.src.match(/\d+(?=.png|.jpg)/)[0])
 							downloadImagesArr[index] = imagesArr[index] = img
 					if Object.getOwnPropertyNames(imagesArr).length == (amountOfImages + 1)
 						defer.resolve(_t)
