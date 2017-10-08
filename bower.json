@@ -1,6 +1,6 @@
 {
   "name": "sarine.viewer.dynamic.light",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "main": "dist/sarine.viewer.dynamic.light.js",
   "ignore": [
     ".git",
