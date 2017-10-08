@@ -1,5 +1,5 @@
 ###!
-sarine.viewer.dynamic.light - v0.2.0 -  Thursday, July 9th, 2015, 1:27:12 PM 
+sarine.viewer.dynamic.light - v0.2.0 -  Sunday, October 8th, 2017, 11:02:37 AM 
  The source code, name, and look and feel of the software are Copyright © 2015 Sarine Technologies Ltd. All Rights Reserved. You may not duplicate, copy, reuse, sell or otherwise exploit any portion of the code, content or visual design elements without express written permission from Sarine Technologies Ltd. The terms and conditions of the sarine.com website (http://sarine.com/terms-and-conditions/) apply to the access and use of this software.
 ###
 
@@ -71,6 +71,8 @@ class Light extends Viewer.Dynamic
 	speed = 100
 	sliceCount = 0
 	counter = 1
+	spriteImg = null
+
 	constructor: (options) ->
 		super(options)						
 		{@sliceDownload} = options
@@ -94,7 +96,20 @@ class Light extends Viewer.Dynamic
 		@loadImage(@src + "00.png").then((img)->
 			_t.canvas.attr {'width':img.width, 'height': img.height}
 			_t.ctx.drawImage img , 0 , 0 			
-			defer.resolve(_t) 
+			
+			# try load the sprite image.
+			# if not exist, use the old method of multiple images.
+			spriteImg = new Image()
+			spriteImg.onload = (e) ->
+				defer.resolve(_t)
+			
+			spriteImg.onerror = (e) ->
+				spriteImg = null
+				defer.resolve(_t)
+			
+			spriteImg.src = _t.src + "sprite.png"
+
+			return
 		)
 		defer
 	loadParts : (gap,defer)->
@@ -120,10 +135,11 @@ class Light extends Viewer.Dynamic
 
 	full_init : ()->
 		defer = @full_init_defer
-		defer.notify(@id + " : start load all images")
+		if spriteImg is null
+			defer.notify(@id + " : start load all images")
 
-		@loadParts().then(defer.resolve) 
-		#$.when.apply($, allDeferreds).done(defer.resolve) 		
+			@loadParts().then(defer.resolve) 
+			#$.when.apply($, allDeferreds).done(defer.resolve)
 		defer	
 
 	nextImage : ()->
@@ -132,6 +148,33 @@ class Light extends Viewer.Dynamic
 			@ctx.clearRect 0, 0, @ctx.canvas.width, @ctx.canvas.height
 			@ctx.drawImage downloadImagesArr[indexer[counter]] , 0 , 0			
 			counter = (counter + 1) % indexer.length			
+
+	play : ()->
+		if spriteImg is null
+			super(true)
+		else
+			# In interval, Load the sprite image to the canvas and move the x axis to the right till the end, and return 
+			# to the start.
+			xPosition = 0
+			_t = @
+
+			intervalCallback = () ->
+				_t.ctx.clearRect xPosition, 0, _t.ctx.canvas.width, _t.ctx.canvas.height
+				_t.ctx.drawImage spriteImg, xPosition, 0,_t.ctx.canvas.width,_t.ctx.canvas.height,0,0,_t.ctx.canvas.width,_t.ctx.canvas.height
+
+				# last image, return to the start
+				if imageIndex <= amountOfImages
+					xPosition += _t.ctx.canvas.width
+					imageIndex++
+				else
+					imageIndex = 0
+					xPosition = 0
+
+				return
+				
+			setInterval intervalCallback,speed
+
+		return
 
 @Light = Light
 
