@@ -1,5 +1,5 @@
 ###!
-sarine.viewer.dynamic.light - v0.2.0 -  Sunday, October 8th, 2017, 11:02:37 AM 
+sarine.viewer.dynamic.light - v0.2.0 -  Sunday, October 8th, 2017, 6:09:17 PM 
  The source code, name, and look and feel of the software are Copyright © 2015 Sarine Technologies Ltd. All Rights Reserved. You may not duplicate, copy, reuse, sell or otherwise exploit any portion of the code, content or visual design elements without express written permission from Sarine Technologies Ltd. The terms and conditions of the sarine.com website (http://sarine.com/terms-and-conditions/) apply to the access and use of this software.
 ###
 class Light extends Viewer.Dynamic
@@ -78,11 +78,14 @@ class Light extends Viewer.Dynamic
 
 	full_init : ()->
 		defer = @full_init_defer
+		_t = @
 		if spriteImg is null
 			defer.notify(@id + " : start load all images")
 
 			@loadParts().then(defer.resolve) 
 			#$.when.apply($, allDeferreds).done(defer.resolve)
+		else
+			defer.resolve(_t)
 		defer	
 
 	nextImage : ()->
@@ -115,7 +118,7 @@ class Light extends Viewer.Dynamic
 
 				return
 				
-			setInterval intervalCallback,speed
+			setInterval intervalCallback,150
 
 		return
 
