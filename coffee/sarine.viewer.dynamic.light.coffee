@@ -1,5 +1,5 @@
 ###!
-sarine.viewer.dynamic.light - v0.2.6 -  Sunday, November 5th, 2017, 5:54:46 PM 
+sarine.viewer.dynamic.light - v0.2.7 -  Tuesday, November 7th, 2017, 10:36:58 AM 
  The source code, name, and look and feel of the software are Copyright © 2015 Sarine Technologies Ltd. All Rights Reserved. You may not duplicate, copy, reuse, sell or otherwise exploit any portion of the code, content or visual design elements without express written permission from Sarine Technologies Ltd. The terms and conditions of the sarine.com website (http://sarine.com/terms-and-conditions/) apply to the access and use of this software.
 ###
 class Light extends Viewer.Dynamic
@@ -51,7 +51,7 @@ class Light extends Viewer.Dynamic
 				spriteImg = null
 				defer.resolve(_t)
 			
-			spriteImg.src = _t.src.replace("Viewer","Sprite") + "sprites.png"
+			spriteImg.src = _t.src.replace("Viewer", "Sprite") + "sprites.png";
 
 			return
 		)
@@ -104,18 +104,26 @@ class Light extends Viewer.Dynamic
 			# to the start.
 			xPosition = 0
 			_t = @
+			spriteDirection = null
 
 			intervalCallback = () ->
-				_t.ctx.clearRect xPosition, 0, _t.ctx.canvas.width, _t.ctx.canvas.height
+
+				if imageIndex == 0
+					spriteDirection = "rtl"
+				if imageIndex == amountOfImages
+					spriteDirection = "ltr"
+
+				_t.ctx.clearRect 0, 0, _t.ctx.canvas.width, _t.ctx.canvas.height
 				_t.ctx.drawImage spriteImg, xPosition, 0,_t.ctx.canvas.width,_t.ctx.canvas.height,0,0,_t.ctx.canvas.width,_t.ctx.canvas.height
 
 				# last image, return to the start
-				if imageIndex <= amountOfImages
+				# if imageIndex <= amountOfImages
+				if spriteDirection == "rtl"
 					xPosition += _t.ctx.canvas.width
 					imageIndex++
 				else
-					imageIndex = 0
-					xPosition = 0
+					imageIndex--
+					xPosition -= _t.ctx.canvas.width
 
 				return
 				
