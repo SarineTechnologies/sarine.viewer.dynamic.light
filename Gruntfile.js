@@ -148,7 +148,7 @@ module.exports = function(grunt) {
         {
             core = 
             [
-                '../../core/sarine.viewer/coffee/sarine.viewer.coffee',
+                '../sarine.viewer/coffee/sarine.viewer.coffee',
                 '../sarine.viewer.dynamic/coffee/sarine.viewer.dynamic.coffee'
             ]
 
