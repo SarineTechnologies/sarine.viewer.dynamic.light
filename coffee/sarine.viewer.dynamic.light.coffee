@@ -37,22 +37,23 @@ class Light extends Viewer.Dynamic
 			_t.canvas.attr {'width':img.width, 'height': img.height}
 			_t.ctx.drawImage img , 0 , 0 			
 			
-			# try load the sprite image.
-			# if not exist, use the old method of multiple images.
-			if(!_t.isHTTP2())
-				spriteImg = new Image()
-				spriteImg.onload = (e) ->
-					_t.canvas.attr {'width':spriteImg.width / (amountOfImages + 1), 'height': spriteImg.height}
-					defer.resolve(_t)
+			# # try load the sprite image.
+			# # if not exist, use the old method of multiple images.
+			# if(!_t.isHTTP2())
+			# 	spriteImg = new Image()
+			# 	spriteImg.onload = (e) ->
+			# 		_t.canvas.attr {'width':spriteImg.width / (amountOfImages + 1), 'height': spriteImg.height}
+			# 		defer.resolve(_t)
 
-				spriteImg.onerror = (e) ->
-					spriteImg = null
-					defer.resolve(_t)
+			# 	spriteImg.onerror = (e) ->
+			# 		spriteImg = null
+			# 		defer.resolve(_t)
 
-				spriteImg.src = _t.src.replace("Viewer", "Sprite") + "sprites.png";
-			else
-				defer.resolve(_t) 
-			return
+			# 	spriteImg.src = _t.src.replace("Viewer", "Sprite") + "sprites.png";
+			# else
+			# 	defer.resolve(_t) 
+			# return
+			defer.resolve(_t)
 		)
 		defer
 	loadParts : (gap,defer)->
@@ -79,6 +80,21 @@ class Light extends Viewer.Dynamic
 	full_init : ()->
 		defer = @full_init_defer
 		_t = @
+
+		# try load the sprite image.
+		# if not exist, use the old method of multiple images.
+		if(!_t.isHTTP2())
+			spriteImg = new Image()
+			spriteImg.onload = (e) ->
+				_t.canvas.attr {'width':spriteImg.width / (amountOfImages + 1), 'height': spriteImg.height}
+				defer.resolve(_t)
+
+			spriteImg.onerror = (e) ->
+				spriteImg = null
+				defer.resolve(_t)
+
+			spriteImg.src = _t.src.replace("Viewer", "Sprite") + "sprites.png";
+		
 		if spriteImg is null
 			defer.notify(@id + " : start load all images")
 
