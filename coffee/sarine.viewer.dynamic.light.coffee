@@ -39,7 +39,7 @@ class Light extends Viewer.Dynamic
 			
 			# # try load the sprite image.
 			# # if not exist, use the old method of multiple images.
-			# if(!_t.isHTTP2())
+			# if(!Device.isHTTP2())
 			# 	spriteImg = new Image()
 			# 	spriteImg.onload = (e) ->
 			# 		_t.canvas.attr {'width':spriteImg.width / (amountOfImages + 1), 'height': spriteImg.height}
@@ -83,7 +83,7 @@ class Light extends Viewer.Dynamic
 
 		# try load the sprite image.
 		# if not exist, use the old method of multiple images.
-		if(!_t.isHTTP2())
+		if(!Device.isHTTP2())
 			spriteImg = new Image()
 			spriteImg.onload = (e) ->
 				_t.canvas.attr {'width':spriteImg.width / (amountOfImages + 1), 'height': spriteImg.height}
