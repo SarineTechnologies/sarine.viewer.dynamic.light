@@ -12,6 +12,7 @@ class Light extends Viewer.Dynamic
 	sliceCount = 0
 	counter = 1
 	spriteImg = null
+	spriteImgLoaded = false
 
 	constructor: (options) ->
 		super(options)						
@@ -83,25 +84,25 @@ class Light extends Viewer.Dynamic
 
 		# try load the sprite image.
 		# if not exist, use the old method of multiple images.
-		if(!Device.isHTTP2())
+		if( ! Device.isHTTP2())
 			spriteImg = new Image()
 			spriteImg.onload = (e) ->
 				_t.canvas.attr {'width':spriteImg.width / (amountOfImages + 1), 'height': spriteImg.height}
+				spriteImgLoaded = true
 				defer.resolve(_t)
 
 			spriteImg.onerror = (e) ->
-				spriteImg = null
-				defer.resolve(_t)
+				# spriteImg = null
+				_t.loadParts().then(defer.resolve) 
+				# defer.resolve(_t)
 
 			spriteImg.src = _t.src.replace("Viewer", "Sprite") + "sprites.png";
-		
-		if spriteImg is null
+			
+		else
 			defer.notify(@id + " : start load all images")
-
 			@loadParts().then(defer.resolve) 
 			#$.when.apply($, allDeferreds).done(defer.resolve)
-		else
-			defer.resolve(_t)
+
 		defer	
 
 	nextImage : ()->
@@ -112,7 +113,7 @@ class Light extends Viewer.Dynamic
 			counter = (counter + 1) % indexer.length			
 
 	play : ()->
-		if spriteImg is null
+		if ! spriteImgLoaded
 			super(true)
 		else
 			# In interval, Load the sprite image to the canvas and move the x axis to the right till the end, and return 
