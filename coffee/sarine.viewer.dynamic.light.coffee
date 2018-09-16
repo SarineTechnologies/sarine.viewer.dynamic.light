@@ -35,7 +35,11 @@ class Light extends Viewer.Dynamic
 		defer.notify(@id + " : start load first image")
 		_t = @
 
-		@isSupportsWebp().then ()->
+		Device.isSupportsWebp().then (->
+			_t.imgType ="webp"
+		),   ->
+			_t.imgType ="png"
+		.then ()->
 			_t.loadImage(_t.src + "00."+ _t.imgType).then (img)->
 				if(img.src.indexOf('data:image')==-1)
 					_t.canvas.attr {'width':img.width, 'height': img.height}
@@ -140,17 +144,5 @@ class Light extends Viewer.Dynamic
 			setInterval intervalCallback,150
 
 		return
-
-	isSupportsWebp : ()->
-		defer = $.Deferred()
-		_t = @
-		if ! _t.imgType 
-			Device.isSupportsWebp().then (->
-					_t.imgType ="webp"
-					defer.resolve()
-				),   ->
-					_t.imgType ="png"
-					defer.resolve()	
-		defer
 
 @Light = Light
