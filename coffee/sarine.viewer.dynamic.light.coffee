@@ -23,7 +23,7 @@ class Light extends Viewer.Dynamic
 		@first_init_defer = $.Deferred()
 		@full_init_defer = $.Deferred()
 		for index in [0..amountOfImages]
-			@imagesArr[index] = undefined
+			@imagesArr[index] = undefined						
 
 	convertElement : () ->
 		@canvas = $("<canvas>")		
@@ -34,48 +34,46 @@ class Light extends Viewer.Dynamic
 		defer = @first_init_defer
 		defer.notify(@id + " : start load first image")
 		_t = @
-		@loadImage(@src + "00.png").then((img)->
-			_t.canvas.attr {'width':img.width, 'height': img.height}
-			_t.ctx.drawImage img , 0 , 0 			
-			
-			# # try load the sprite image.
-			# # if not exist, use the old method of multiple images.
-			# if(!Device.isHTTP2())
-			# 	spriteImg = new Image()
-			# 	spriteImg.onload = (e) ->
-			# 		_t.canvas.attr {'width':spriteImg.width / (amountOfImages + 1), 'height': spriteImg.height}
-			# 		defer.resolve(_t)
 
-			# 	spriteImg.onerror = (e) ->
-			# 		spriteImg = null
-			# 		defer.resolve(_t)
-
-			# 	spriteImg.src = _t.src.replace("Viewer", "Sprite") + "sprites.png";
-			# else
-			# 	defer.resolve(_t) 
-			# return
-			defer.resolve(_t)
-		)
+		Device.isSupportsWebp().then (->
+			_t.imgType ="webp"
+		),   ->
+			_t.imgType ="png"
+		.then ()->
+			_t.loadImage(_t.src + "00."+ _t.imgType).then (img)->
+				if(img.src.indexOf('data:image')==-1)
+					_t.canvas.attr {'width':img.width, 'height': img.height}
+					_t.ctx.drawImage img , 0 , 0 			
+					defer.resolve(_t)
+				else
+					if _t.imgType = "webp"
+						_t.imgType="png"
+						_t.loadImage(_t.src + "00."+ _t.imgType).then((img)->
+							_t.canvas.attr {'width':img.width, 'height': img.height}
+							_t.ctx.drawImage img , 0 , 0 
+							defer.resolve(_t)	
+						)
 		defer
 	loadParts : (gap,defer)->
 		gap = gap || 0
 		defer = defer || $.Deferred()
 		downloadImages = []
 		_t = @
+		reg = new RegExp("\\d+(?=."+_t.imgType+")");
 		$.when.apply($,for index in (index for index in Object.getOwnPropertyNames(@imagesArr) when (index + gap) % @sliceDownload == 0)
-			do (index)->
-				_t.loadImage(_t.src + (if index < 10 then "0" + index else index)  + ".png").then((img)-> downloadImages.push img )
-			).then(()->
-					for img in downloadImages
-						do (img)->
-							index = parseInt(img.src.match(/\d+(?=.png)/)[0])
-							downloadImagesArr[index] = imagesArr[index] = img
-					if Object.getOwnPropertyNames(imagesArr).length == (amountOfImages + 1)
-						defer.resolve(_t)
-					else
-						_t.loadParts(++gap,defer)
-					_t.delay = (_t.sliceDownload / gap) * setSpeed  
-				)
+				do (index)->
+					_t.loadImage(_t.src + (if index < 10 then "0" + index else index)  + "."+_t.imgType).then((img)-> downloadImages.push img )
+				).then(()->
+						for img in downloadImages
+							do (img)->
+								index = parseInt(img.src.match(reg)[0])
+								downloadImagesArr[index] = imagesArr[index] = img
+						if Object.getOwnPropertyNames(imagesArr).length == (amountOfImages + 1)
+							defer.resolve(_t)
+						else
+							_t.loadParts(++gap,defer)
+						_t.delay = (_t.sliceDownload / gap) * setSpeed  
+					)
 		return defer
 
 	full_init : ()->
