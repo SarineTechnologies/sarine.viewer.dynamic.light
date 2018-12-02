@@ -11,7 +11,7 @@
     "sarine.viewer.dynamic": "https://github.com/SarineTechnologies/sarine.viewer.dynamic.git#dev"
   },
   "devDependencies": {
-    "grunt-git-release": "^0.1.3",
+    "cypress": "^3.0.2",
     "grunt": "^0.4.5",
     "grunt-bower-task": "^0.4.0",
     "grunt-cmd": "0.0.3",
@@ -27,6 +27,7 @@
     "grunt-filerev": "^2.1.2",
     "grunt-git": "^0.3.3",
     "grunt-git-deploy": "^0.1.1",
+    "grunt-git-release": "^0.1.3",
     "grunt-newer": "^1.1.0",
     "grunt-prompt": "^1.3.0",
     "grunt-run": "^0.3.0",
@@ -39,6 +40,8 @@
   },
   "scripts": {
     "build": "npm install && grunt build",
-    "dev": "grunt dev"
+    "dev": "grunt dev",
+    "test": "cypress run --project . --env",
+    "test-dev": "cypress open --project . --env DEMO_VIEWER=http://localhost:3000/api/demo/,DEMO_STONE=9XWGTL880SX,DEMO_CONFIGURATION=AUTOTEST1,VIEWER_URL=http://api-2.qa.sarine.com/viewer/v1/"
   }
 }
