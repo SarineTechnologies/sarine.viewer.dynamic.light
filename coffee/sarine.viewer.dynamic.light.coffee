@@ -15,7 +15,8 @@ class Light extends Viewer.Dynamic
 	spriteImgLoaded = false
 
 	constructor: (options) ->
-		super(options)						
+		super(options)	
+		@src= options.extraData	 &&options.extraData.extraData && options.extraData.extraData.src || 	@.src		
 		{@sliceDownload} = options
 		@sliceDownload = @sliceDownload | 3
 		@imagesArr = {}
