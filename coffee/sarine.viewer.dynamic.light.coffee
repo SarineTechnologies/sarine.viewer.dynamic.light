@@ -16,7 +16,7 @@ class Light extends Viewer.Dynamic
 
 	constructor: (options) ->
 		super(options)	
-		@src= options.extraData	 &&options.extraData.extraData && options.extraData.extraData.src || 	@.src		
+		@src= options.extraData	&& options.extraData.src || @.src		
 		{@sliceDownload} = options
 		@sliceDownload = @sliceDownload | 3
 		@imagesArr = {}
